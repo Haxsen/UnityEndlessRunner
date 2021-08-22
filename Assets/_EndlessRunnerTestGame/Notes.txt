@@ -1,0 +1,16 @@
+MECHANICS:
+Movement
+	Run
+	Left Right
+	Jump
+	Roll Down
+	JumpHigh
+	
+Obstacles
+	Blocker: Jump
+	BlockerHollow: Jump, Roll
+	BlockerHigh: Roll
+	BlockerTrain: Move Aside
+	
+
+DESIGN:
