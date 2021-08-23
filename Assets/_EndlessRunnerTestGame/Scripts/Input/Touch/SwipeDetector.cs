@@ -1,14 +1,15 @@
 ﻿using UnityEngine;
 
-namespace _EndlessRunnerTestGame.Scripts.Input
+namespace _EndlessRunnerTestGame.Scripts.Input.Touch
 {
     public class SwipeDetector : MonoBehaviour
     {
-        [SerializeField] private float minSwipeDistance = 0.2f;
+        [SerializeField] private float minSwipeDistance = 0.01f;
         [SerializeField] private float maxSwipeTime = 1f;
         [SerializeField] private float directionThreshold = 0.8f;
         
-        private TouchInputManager _inputManager;
+        private TouchInputManager _touchInputManager;
+        private ITouchInputResponse _touchInputResponse;
 
         private Vector2 _startPosition;
         private Vector2 _endPosition;
@@ -17,20 +18,21 @@ namespace _EndlessRunnerTestGame.Scripts.Input
 
         private void Awake()
         {
-            TryGetComponent(out _inputManager);
+            TryGetComponent(out _touchInputManager);
+            TryGetComponent(out _touchInputResponse);
         }
 
         private void OnEnable()
         {
-            _inputManager.OnStartTouch += SwipeStart;
-            _inputManager.OnEndTouch += SwipeEnd;
+            _touchInputManager.OnStartTouch += SwipeStart;
+            _touchInputManager.OnEndTouch += SwipeEnd;
             Debug.Log("subbed");
         }
 
         private void OnDisable()
         {
-            _inputManager.OnStartTouch -= SwipeStart;
-            _inputManager.OnEndTouch -= SwipeEnd;
+            _touchInputManager.OnStartTouch -= SwipeStart;
+            _touchInputManager.OnEndTouch -= SwipeEnd;
         }
 
         private void SwipeStart(Vector2 position, float time)
@@ -74,18 +76,22 @@ namespace _EndlessRunnerTestGame.Scripts.Input
             if (Vector2.Dot(Vector2.up, swipedDirection) > directionThreshold)
             {
                 Debug.Log("swiped up");
+                _touchInputResponse.Jump();
             }
             else if (Vector2.Dot(Vector2.down, swipedDirection) > directionThreshold)
             {
                 Debug.Log("swiped down");
+                _touchInputResponse.RollDown();
             }
             else if (Vector2.Dot(Vector2.left, swipedDirection) > directionThreshold)
             {
                 Debug.Log("swiped left");
+                _touchInputResponse.MoveSideways(-1);
             }
             else if (Vector2.Dot(Vector2.right, swipedDirection) > directionThreshold)
             {
                 Debug.Log("swiped right");
+                _touchInputResponse.MoveSideways(1);
             }
         }
     }

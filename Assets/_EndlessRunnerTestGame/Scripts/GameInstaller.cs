@@ -1,3 +1,4 @@
+using _EndlessRunnerTestGame.Scripts.Player;
 using Zenject;
 
 namespace _EndlessRunnerTestGame.Scripts
@@ -6,6 +7,7 @@ namespace _EndlessRunnerTestGame.Scripts
     {
         public override void InstallBindings()
         {
+            Container.Bind<IRunningSideManager>().To<RunningSideManager>().AsSingle().NonLazy();
         }
     }
 }

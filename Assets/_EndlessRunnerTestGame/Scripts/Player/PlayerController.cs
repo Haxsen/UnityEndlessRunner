@@ -1,45 +1,50 @@
+using _EndlessRunnerTestGame.Scripts.Input;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using Zenject;
 
 namespace _EndlessRunnerTestGame.Scripts.Player
 {
     [DefaultExecutionOrder(-1)]
-    public class PlayerController : MonoBehaviour
+    public class PlayerController : MonoBehaviour, IPlayerInputEvents
     {
-        private enum RunningSides {
-            Left = -1,
-            Center = 0,
-            Right = 1
-        }
+        public event IPlayerInputEvents.JumpDelegate OnJump;
+        public event IPlayerInputEvents.ChangeSideDelegate OnChangeSide;
+        public event IPlayerInputEvents.RollDownDelegate OnRollDown;
 
-        public delegate void JumpDelegate();
-        public delegate void ChangeSideDelegate(int side);
-        public delegate void RollDownDelegate();
-        public event JumpDelegate OnJump;
-        public event ChangeSideDelegate OnChangeSide;
-        public event RollDownDelegate OnRollDown;
-        
-        private PlayerControls _playerControls;
-        private RunningSides _currentRunningSide = RunningSides.Center;
+        private PlayerActions _playerActions;
         private IGroundChecker _groundChecker;
+        
+        private IRunningSideManager _runningSideManager;
+
+        [Inject]
+        public void Construct(IRunningSideManager runningSideManager)
+        {
+            _runningSideManager = runningSideManager;
+        }
 
         private void OnEnable()
         {
-            _playerControls.Enable();
+            _playerActions.Enable();
         }
 
         private void OnDisable()
         {
-            _playerControls.Disable();
+            _playerActions.Disable();
         }
 
         private void Awake()
         {
+            _playerActions = new PlayerActions();
             TryGetComponent(out _groundChecker);
-            _playerControls = new PlayerControls();
-            _playerControls.DefaultActionMap.SideMovement.performed += MoveSideways;
-            _playerControls.DefaultActionMap.Jump.performed += ctx => Jump();
-            _playerControls.DefaultActionMap.RollDown.performed += ctx => RollDown();
+            ConfigureInputCallbacks();
+        }
+
+        private void ConfigureInputCallbacks()
+        {
+            _playerActions.PlayerControls.SideMovement.performed += MoveSideways;
+            _playerActions.PlayerControls.Jump.performed += ctx => Jump();
+            _playerActions.PlayerControls.RollDown.performed += ctx => RollDown();
         }
 
         private void Jump()
@@ -58,15 +63,7 @@ namespace _EndlessRunnerTestGame.Scripts.Player
         private void MoveSideways(InputAction.CallbackContext ctx)
         {
             int sideInputValue = (int) ctx.ReadValue<float>();
-            if (_currentRunningSide == RunningSides.Left)
-            {
-                if (sideInputValue < 0) return;
-            }
-            else if (_currentRunningSide == RunningSides.Right)
-            {
-                if (sideInputValue > 0) return;
-            }
-            _currentRunningSide = (RunningSides) (sideInputValue + (int) _currentRunningSide);
+            if (!_runningSideManager.IsSidewaysMovable(sideInputValue)) return;
             OnChangeSide?.Invoke(sideInputValue);
         }
     }

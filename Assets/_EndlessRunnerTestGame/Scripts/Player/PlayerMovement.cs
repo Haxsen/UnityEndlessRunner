@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using _EndlessRunnerTestGame.Scripts.Input;
 using UnityEngine;
 
 namespace _EndlessRunnerTestGame.Scripts.Player
@@ -10,21 +11,29 @@ namespace _EndlessRunnerTestGame.Scripts.Player
         [SerializeField] private float sideChangeSpeed = 1f;
     
         private Rigidbody _rb;
-        private PlayerController _playerController;
+        private IPlayerInputEvents _playerPlayerInputEvents;
         private Coroutine _sidewaysCoroutine;
         private int _currentSide;
 
         private void Awake()
         {
             TryGetComponent(out _rb);
-            TryGetComponent(out _playerController);
+            TryGetComponent(out _playerPlayerInputEvents);
             MoveForward();
         }
 
         private void OnEnable()
         {
-            _playerController.OnJump += Jump;
-            _playerController.OnChangeSide += MoveSideways;
+            _playerPlayerInputEvents.OnJump += Jump;
+            _playerPlayerInputEvents.OnChangeSide += MoveSideways;
+            _playerPlayerInputEvents.OnRollDown += RollDown;
+        }
+
+        private void OnDisable()
+        {
+            _playerPlayerInputEvents.OnJump -= Jump;
+            _playerPlayerInputEvents.OnChangeSide -= MoveSideways;
+            _playerPlayerInputEvents.OnRollDown -= RollDown;
         }
 
         private void MoveForward()
@@ -62,6 +71,11 @@ namespace _EndlessRunnerTestGame.Scripts.Player
                 ticks++;
                 yield return new WaitForEndOfFrame();
             }
+        }
+
+        private void RollDown()
+        {
+            _rb.AddForce(Vector3.down * jumpPower, ForceMode.Impulse);
         }
     }
 }

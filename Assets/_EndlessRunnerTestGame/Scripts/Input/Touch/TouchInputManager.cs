@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.InputSystem;
 
-namespace _EndlessRunnerTestGame.Scripts.Input
+namespace _EndlessRunnerTestGame.Scripts.Input.Touch
 {
     [DefaultExecutionOrder(-1)]
     public class TouchInputManager : MonoBehaviour
@@ -11,37 +11,37 @@ namespace _EndlessRunnerTestGame.Scripts.Input
         public event StartTouch OnStartTouch;
         public event EndTouch OnEndTouch;
 
-        private PlayerControls _playerControls;
+        private PlayerActions _playerActions;
         private Camera _mainCamera;
 
         private void OnEnable()
         {
-            _playerControls.Enable();
+            _playerActions.Enable();
         }
 
         private void OnDisable()
         {
-            _playerControls.Disable();
+            _playerActions.Disable();
         }
 
         private void Awake()
         {
             _mainCamera = Camera.main;
-            _playerControls = new PlayerControls();
-            _playerControls.DefaultActionMap.PrimaryContact.started += StartTouchPrimary;
-            _playerControls.DefaultActionMap.PrimaryContact.canceled += EndTouchPrimary;
+            _playerActions = new PlayerActions();
+            _playerActions.PlayerControls.PrimaryContact.started += StartTouchPrimary;
+            _playerActions.PlayerControls.PrimaryContact.canceled += EndTouchPrimary;
         }
 
         private void StartTouchPrimary(InputAction.CallbackContext ctx)
         {
             OnStartTouch?.Invoke(TouchInputHelper.GetPrimaryPosition(_mainCamera,
-                _playerControls.DefaultActionMap.PrimaryPosition.ReadValue<Vector2>()), (float) ctx.startTime);
+                _playerActions.PlayerControls.PrimaryPosition.ReadValue<Vector2>()), (float) ctx.startTime);
         }
 
         private void EndTouchPrimary(InputAction.CallbackContext ctx)
         {
             OnEndTouch?.Invoke(TouchInputHelper.GetPrimaryPosition(_mainCamera,
-                _playerControls.DefaultActionMap.PrimaryPosition.ReadValue<Vector2>()), (float) ctx.time);
+                _playerActions.PlayerControls.PrimaryPosition.ReadValue<Vector2>()), (float) ctx.time);
         }
     }
 }

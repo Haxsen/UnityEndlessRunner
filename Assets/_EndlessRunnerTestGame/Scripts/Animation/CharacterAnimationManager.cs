@@ -1,4 +1,5 @@
 using System;
+using _EndlessRunnerTestGame.Scripts.Input;
 using _EndlessRunnerTestGame.Scripts.Player;
 using UnityEngine;
 
@@ -9,29 +10,29 @@ namespace _EndlessRunnerTestGame.Scripts.Animation
         [SerializeField] private CharacterAnimatorValues characterAnimatorValues = new CharacterAnimatorValues();
         
         private Animator _animator;
-        private PlayerController _playerController;
+        private IPlayerInputEvents _playerPlayerInputEvents;
         private IGroundChecker _groundChecker;
 
         private void Awake()
         {
             TryGetComponent(out _animator);
-            TryGetComponent(out _playerController);
+            TryGetComponent(out _playerPlayerInputEvents);
             TryGetComponent(out _groundChecker);
             StartRunForwards();
         }
 
         private void OnEnable()
         {
-            _playerController.OnJump += StartJump;
-            _playerController.OnChangeSide += StartChangingSide;
-            _playerController.OnRollDown += StartRolling;
+            _playerPlayerInputEvents.OnJump += StartJump;
+            _playerPlayerInputEvents.OnChangeSide += StartChangingSide;
+            _playerPlayerInputEvents.OnRollDown += StartRolling;
         }
 
         private void OnDisable()
         {
-            _playerController.OnJump -= StartJump;
-            _playerController.OnChangeSide -= StartChangingSide;
-            _playerController.OnRollDown -= StartRolling;
+            _playerPlayerInputEvents.OnJump -= StartJump;
+            _playerPlayerInputEvents.OnChangeSide -= StartChangingSide;
+            _playerPlayerInputEvents.OnRollDown -= StartRolling;
         }
 
         private void StartRunForwards()
