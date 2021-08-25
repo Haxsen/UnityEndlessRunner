@@ -1,4 +1,5 @@
 using _EndlessRunnerTestGame.Scripts.Input;
+using _EndlessRunnerTestGame.Scripts.Input.Touch;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using Zenject;
@@ -16,11 +17,13 @@ namespace _EndlessRunnerTestGame.Scripts.Player
         private IGroundChecker _groundChecker;
         
         private IRunningSideManager _runningSideManager;
+        private ITouchInputResponse _touchInputResponse;
 
         [Inject]
-        public void Construct(IRunningSideManager runningSideManager)
+        public void Construct(IRunningSideManager runningSideManager, PlayerActions playerActions)
         {
             _runningSideManager = runningSideManager;
+            _playerActions = playerActions;
         }
 
         private void OnEnable()
@@ -35,16 +38,24 @@ namespace _EndlessRunnerTestGame.Scripts.Player
 
         private void Awake()
         {
-            _playerActions = new PlayerActions();
             TryGetComponent(out _groundChecker);
+            _touchInputResponse = GetComponentInChildren<ITouchInputResponse>();
             ConfigureInputCallbacks();
+            ConfigureTouchCallbacks();
         }
 
         private void ConfigureInputCallbacks()
         {
-            _playerActions.PlayerControls.SideMovement.performed += MoveSideways;
+            _playerActions.PlayerControls.SideMovement.performed += CatchSidewaysInput;
             _playerActions.PlayerControls.Jump.performed += ctx => Jump();
             _playerActions.PlayerControls.RollDown.performed += ctx => RollDown();
+        }
+
+        private void ConfigureTouchCallbacks()
+        {
+            _touchInputResponse.OnSwipeSideways += MoveSideways;
+            _touchInputResponse.OnSwipeUp += Jump;
+            _touchInputResponse.OnSwipeDown += RollDown;
         }
 
         private void Jump()
@@ -60,9 +71,14 @@ namespace _EndlessRunnerTestGame.Scripts.Player
             Debug.Log("rolling down");
         }
 
-        private void MoveSideways(InputAction.CallbackContext ctx)
+        private void CatchSidewaysInput(InputAction.CallbackContext ctx)
         {
             int sideInputValue = (int) ctx.ReadValue<float>();
+            MoveSideways(sideInputValue);
+        }
+
+        private void MoveSideways(int sideInputValue)
+        {
             if (!_runningSideManager.IsSidewaysMovable(sideInputValue)) return;
             OnChangeSide?.Invoke(sideInputValue);
         }

@@ -1,43 +1,32 @@
 ﻿using _EndlessRunnerTestGame.Scripts.Player;
 using UnityEngine;
-using UnityEngine.InputSystem;
 using Zenject;
 
 namespace _EndlessRunnerTestGame.Scripts.Input.Touch
 {
-    public class SwipeResponse : MonoBehaviour, IPlayerInputEvents, ITouchInputResponse
+    [DefaultExecutionOrder(-1)]
+    public class SwipeResponse : MonoBehaviour, ITouchInputResponse
     {
-        public event IPlayerInputEvents.JumpDelegate OnJump;
-        public event IPlayerInputEvents.ChangeSideDelegate OnChangeSide;
-        public event IPlayerInputEvents.RollDownDelegate OnRollDown;
-        
-        private IGroundChecker _groundChecker;
-        
-        [Inject]
-        private IRunningSideManager _runningSideManager;
-
-        private void Awake()
-        {
-            TryGetComponent(out _groundChecker);
-        }
+        public event IPlayerInputEvents.JumpDelegate OnSwipeUp;
+        public event IPlayerInputEvents.ChangeSideDelegate OnSwipeSideways;
+        public event IPlayerInputEvents.RollDownDelegate OnSwipeDown;
 
         public void Jump()
         {
-            if (!_groundChecker.IsGrounded()) return;
-            OnJump?.Invoke();
+            OnSwipeUp?.Invoke();
             Debug.Log("jumping touch");
         }
 
         public void RollDown()
         {
-            OnRollDown?.Invoke();
-            Debug.Log("rolling down");
+            OnSwipeDown?.Invoke();
+            Debug.Log("rolling down touch");
         }
 
         public void MoveSideways(int sideInputValue)
         {
-            if (!_runningSideManager.IsSidewaysMovable(sideInputValue)) return;
-            OnChangeSide?.Invoke(sideInputValue);
+            OnSwipeSideways?.Invoke(sideInputValue);
+            Debug.Log("sideways touch");
         }
     }
 }

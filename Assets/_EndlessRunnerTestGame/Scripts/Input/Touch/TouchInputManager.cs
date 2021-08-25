@@ -1,5 +1,7 @@
-﻿using UnityEngine;
+﻿using System.Runtime.Remoting.Messaging;
+using UnityEngine;
 using UnityEngine.InputSystem;
+using Zenject;
 
 namespace _EndlessRunnerTestGame.Scripts.Input.Touch
 {
@@ -14,6 +16,12 @@ namespace _EndlessRunnerTestGame.Scripts.Input.Touch
         private PlayerActions _playerActions;
         private Camera _mainCamera;
 
+        [Inject]
+        public void Construct(PlayerActions playerActions)
+        {
+            _playerActions = playerActions;
+        }
+
         private void OnEnable()
         {
             _playerActions.Enable();
@@ -27,7 +35,6 @@ namespace _EndlessRunnerTestGame.Scripts.Input.Touch
         private void Awake()
         {
             _mainCamera = Camera.main;
-            _playerActions = new PlayerActions();
             _playerActions.PlayerControls.PrimaryContact.started += StartTouchPrimary;
             _playerActions.PlayerControls.PrimaryContact.canceled += EndTouchPrimary;
         }

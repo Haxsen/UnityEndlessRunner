@@ -2,8 +2,8 @@
 {
     public interface ITouchInputResponse
     {
-        public void Jump();
-        public void RollDown();
-        public void MoveSideways(int sideInputValue);
+        public event IPlayerInputEvents.JumpDelegate OnSwipeUp;
+        public event IPlayerInputEvents.ChangeSideDelegate OnSwipeSideways;
+        public event IPlayerInputEvents.RollDownDelegate OnSwipeDown;
     }
 }

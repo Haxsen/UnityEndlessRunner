@@ -9,7 +9,7 @@ namespace _EndlessRunnerTestGame.Scripts.Input.Touch
         [SerializeField] private float directionThreshold = 0.8f;
         
         private TouchInputManager _touchInputManager;
-        private ITouchInputResponse _touchInputResponse;
+        private SwipeResponse _swipeResponse;
 
         private Vector2 _startPosition;
         private Vector2 _endPosition;
@@ -19,7 +19,7 @@ namespace _EndlessRunnerTestGame.Scripts.Input.Touch
         private void Awake()
         {
             TryGetComponent(out _touchInputManager);
-            TryGetComponent(out _touchInputResponse);
+            TryGetComponent(out _swipeResponse);
         }
 
         private void OnEnable()
@@ -76,22 +76,22 @@ namespace _EndlessRunnerTestGame.Scripts.Input.Touch
             if (Vector2.Dot(Vector2.up, swipedDirection) > directionThreshold)
             {
                 Debug.Log("swiped up");
-                _touchInputResponse.Jump();
+                _swipeResponse.Jump();
             }
             else if (Vector2.Dot(Vector2.down, swipedDirection) > directionThreshold)
             {
                 Debug.Log("swiped down");
-                _touchInputResponse.RollDown();
+                _swipeResponse.RollDown();
             }
             else if (Vector2.Dot(Vector2.left, swipedDirection) > directionThreshold)
             {
                 Debug.Log("swiped left");
-                _touchInputResponse.MoveSideways(-1);
+                _swipeResponse.MoveSideways(-1);
             }
             else if (Vector2.Dot(Vector2.right, swipedDirection) > directionThreshold)
             {
                 Debug.Log("swiped right");
-                _touchInputResponse.MoveSideways(1);
+                _swipeResponse.MoveSideways(1);
             }
         }
     }

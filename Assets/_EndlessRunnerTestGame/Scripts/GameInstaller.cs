@@ -8,6 +8,7 @@ namespace _EndlessRunnerTestGame.Scripts
         public override void InstallBindings()
         {
             Container.Bind<IRunningSideManager>().To<RunningSideManager>().AsSingle().NonLazy();
+            Container.Bind<PlayerActions>().AsSingle();
         }
     }
 }
