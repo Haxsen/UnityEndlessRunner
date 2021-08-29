@@ -2,17 +2,25 @@
 
 namespace _EndlessRunnerTestGame.Scripts.Obstacle
 {
+    /// <summary>
+    /// Manages own side's obstacle generation.
+    /// </summary>
     public class ObstacleGenerator : MonoBehaviour
     {
+        [Header("Obstacles")]
         [SerializeField] private GameObject[] obstacles;
         [SerializeField] private GameObject obstacleExpandable;
         [SerializeField] private GameObject obstacleClimbable;
 
+        [Header("Obstacles Container")]
         [SerializeField] private Transform obstaclesParent;
     
         private float _overhead;
         private bool _isGeneratingTrain;
 
+        /// <summary>
+        /// Generates a normal obstacle.
+        /// </summary>
         public void GenerateObstacle()
         {
             if (_isGeneratingTrain) return;
@@ -21,8 +29,17 @@ namespace _EndlessRunnerTestGame.Scripts.Obstacle
             int rand = Random.Range(0, obstacles.Length);
             GameObject spawnedObstacle = Instantiate(obstacles[rand], thisPosition,
                 Quaternion.identity, obstaclesParent);
+            
+            float obstacleLength = spawnedObstacle.transform.GetChild(0).localScale.z;
+            _overhead += obstacleLength;
+            UpdateSelfPosition(transform.localPosition);
         }
 
+        /// <summary>
+        /// Generates a train obstacle.
+        /// </summary>
+        /// <param name="isClimbable">Decides to spawn climbable type of train.</param>
+        /// <param name="isExpansion">Whether the mode is expansion.</param>
         public void GenerateTrain(bool isClimbable, bool isExpansion)
         {
             if (_isGeneratingTrain && !isExpansion) return;
@@ -43,6 +60,11 @@ namespace _EndlessRunnerTestGame.Scripts.Obstacle
             RandomGenerateTrain();
         }
 
+        /// <summary>
+        /// Randomizes frontal position a bit.
+        /// </summary>
+        /// <param name="position">The target position.</param>
+        /// <returns>The new randomized position.</returns>
         private Vector3 GetPositionWithRandomizedAxisZ(Vector3 position)
         {
             float randomizeAxisZ = Random.Range(0, 3);
@@ -50,12 +72,18 @@ namespace _EndlessRunnerTestGame.Scripts.Obstacle
             return position;
         }
 
+        /// <summary>
+        /// Decides to expand the train.
+        /// </summary>
         private void RandomGenerateTrain()
         {
-            if (Random.value > 0.25f) ExpandTrain();
+            if (Random.value > 0.75f) ExpandTrain();
             else _isGeneratingTrain = false;
         }
 
+        /// <summary>
+        /// Expands the train.
+        /// </summary>
         private void ExpandTrain()
         {
             Debug.Log("expanding train");
@@ -63,6 +91,10 @@ namespace _EndlessRunnerTestGame.Scripts.Obstacle
             GenerateTrain(false, true);
         }
 
+        /// <summary>
+        /// Updates own position to avoid spawning multiple objects in the same position.
+        /// </summary>
+        /// <param name="fromPosition">The original position.</param>
         private void UpdateSelfPosition(Vector3 fromPosition)
         {
             transform.localPosition = new Vector3(fromPosition.x, fromPosition.y, fromPosition.z + _overhead);

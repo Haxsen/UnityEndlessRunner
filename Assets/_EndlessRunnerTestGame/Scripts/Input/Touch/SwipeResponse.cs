@@ -4,6 +4,9 @@ using Zenject;
 
 namespace _EndlessRunnerTestGame.Scripts.Input.Touch
 {
+    /// <summary>
+    /// Handles the response of Swipes.
+    /// </summary>
     [DefaultExecutionOrder(-1)]
     public class SwipeResponse : MonoBehaviour, ITouchInputResponse
     {
@@ -11,6 +14,9 @@ namespace _EndlessRunnerTestGame.Scripts.Input.Touch
         public event IPlayerInputEvents.ChangeSideDelegate OnSwipeSideways;
         public event IPlayerInputEvents.RollDownDelegate OnSwipeDown;
 
+        /// <summary>
+        /// Fires the Jump event.
+        /// </summary>
         public void Jump()
         {
             OnSwipeUp?.Invoke();

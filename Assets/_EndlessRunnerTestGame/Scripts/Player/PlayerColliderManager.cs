@@ -1,13 +1,17 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using _EndlessRunnerTestGame.Scripts.Input;
 using UnityEngine;
 
 namespace _EndlessRunnerTestGame.Scripts.Player
 {
+    /// <summary>
+    /// Manages the player collider on states like rolling.
+    /// </summary>
     public class PlayerColliderManager : MonoBehaviour
     {
+        [Tooltip("Value used to divide the collider size.")]
         [SerializeField] private float sizeMultiplier = 2f;
+        [Tooltip("Roll interval in seconds.")]
         [SerializeField] private float waitRevertRollMode = 1.5f;
         
         private IPlayerInputEvents _playerPlayerInputEvents;
@@ -30,6 +34,9 @@ namespace _EndlessRunnerTestGame.Scripts.Player
             _playerPlayerInputEvents.OnRollDown -= ChangeToRollMode;
         }
 
+        /// <summary>
+        /// Changes to Roll mode by dividing the size down by <see cref="sizeMultiplier"/>.
+        /// </summary>
         private void ChangeToRollMode()
         {
             if (!_isColliderAtDefaultSize) return;
@@ -38,6 +45,10 @@ namespace _EndlessRunnerTestGame.Scripts.Player
             _revertRollModeCoroutine = StartCoroutine(RevertRollMode(waitRevertRollMode));
         }
 
+        /// <summary>
+        /// Sets collider size by a multiplier.
+        /// </summary>
+        /// <param name="multiplyToSize">The multiplier.</param>
         private void SetColliderSize(float multiplyToSize)
         {
             Vector3 scale = transform.localScale;
@@ -47,6 +58,11 @@ namespace _EndlessRunnerTestGame.Scripts.Player
             _isColliderAtDefaultSize = false;
         }
 
+        /// <summary>
+        /// Reverts back to normal mode from roll mode by multiplying the size up by <see cref="sizeMultiplier"/>.
+        /// </summary>
+        /// <param name="wait"></param>
+        /// <returns></returns>
         IEnumerator RevertRollMode(float wait)
         {
             yield return new WaitForSeconds(wait);

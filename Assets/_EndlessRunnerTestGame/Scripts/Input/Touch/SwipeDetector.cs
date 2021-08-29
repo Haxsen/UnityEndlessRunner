@@ -4,8 +4,11 @@ namespace _EndlessRunnerTestGame.Scripts.Input.Touch
 {
     public class SwipeDetector : MonoBehaviour
     {
+        [Header("Swipe limits")]
         [SerializeField] private float minSwipeDistance = 0.01f;
         [SerializeField] private float maxSwipeTime = 1f;
+        
+        [Header("Direction")]
         [SerializeField] private float directionThreshold = 0.8f;
         
         private TouchInputManager _touchInputManager;
@@ -35,6 +38,11 @@ namespace _EndlessRunnerTestGame.Scripts.Input.Touch
             _touchInputManager.OnEndTouch -= SwipeEnd;
         }
 
+        /// <summary>
+        /// Catches the starting position and time.
+        /// </summary>
+        /// <param name="position">The touch position.</param>
+        /// <param name="time">The time of touch.</param>
         private void SwipeStart(Vector2 position, float time)
         {
             _startPosition = position;
@@ -42,6 +50,11 @@ namespace _EndlessRunnerTestGame.Scripts.Input.Touch
             Debug.Log("swipe start");
         }
 
+        /// <summary>
+        /// First catches the ending position and time, then executes the swipe detection procedure.
+        /// </summary>
+        /// <param name="position">The touch position.</param>
+        /// <param name="time">The time of touch.</param>
         private void SwipeEnd(Vector2 position, float time)
         {
             _endPosition = position;
@@ -50,6 +63,9 @@ namespace _EndlessRunnerTestGame.Scripts.Input.Touch
             DetectSwipe();
         }
 
+        /// <summary>
+        /// Calculates the swipe direction and limits. If the swipe is valid, executes the swipe direction procedure.
+        /// </summary>
         private void DetectSwipe()
         {
             float dist = Vector3.Distance(_startPosition, _endPosition);
@@ -71,6 +87,10 @@ namespace _EndlessRunnerTestGame.Scripts.Input.Touch
             }
         }
 
+        /// <summary>
+        /// Determines the swipe direction.
+        /// </summary>
+        /// <param name="swipedDirection">The 2D Vector containing the magnitude of directional values.</param>
         private void SwipeDirection(Vector2 swipedDirection)
         {
             if (Vector2.Dot(Vector2.up, swipedDirection) > directionThreshold)

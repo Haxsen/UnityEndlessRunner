@@ -1,6 +1,4 @@
-﻿using UnityEngine;
-
-namespace _EndlessRunnerTestGame.Scripts.Player
+﻿namespace _EndlessRunnerTestGame.Scripts.Player
 {
     public class RunningSideManager : IRunningSideManager
     {
