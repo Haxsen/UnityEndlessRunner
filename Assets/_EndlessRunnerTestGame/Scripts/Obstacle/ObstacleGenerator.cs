@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using _EndlessRunnerTestGame.Scripts.Pickup;
+using UnityEngine;
 
 namespace _EndlessRunnerTestGame.Scripts.Obstacle
 {
@@ -14,6 +15,9 @@ namespace _EndlessRunnerTestGame.Scripts.Obstacle
 
         [Header("Obstacles Container")]
         [SerializeField] private Transform obstaclesParent;
+
+        [Header("Pickups")]
+        [SerializeField] private PickupGenerator pickupGenerator;
     
         private float _overhead;
         private bool _isGeneratingTrain;
@@ -45,15 +49,23 @@ namespace _EndlessRunnerTestGame.Scripts.Obstacle
             if (_isGeneratingTrain && !isExpansion) return;
 
             Vector3 thisPosition = transform.position;
-            if (!isExpansion) thisPosition = GetPositionWithRandomizedAxisZ(transform.position);
+            if (!isExpansion) thisPosition = GetPositionWithRandomizedAxisZ(thisPosition);
             GameObject toSpawn = isClimbable ? obstacleClimbable : obstacleExpandable;
             
             GameObject spawnedObstacle = Instantiate(toSpawn, thisPosition,
                 Quaternion.identity, obstaclesParent);
             if (_isGeneratingTrain) spawnedObstacle.name += "+";
-            
-            float trainLength = spawnedObstacle.transform.GetChild(0).localScale.z;
+
+            Vector3 spawnedObjectScale = spawnedObstacle.transform.GetChild(0).localScale;
+            float trainLength = spawnedObjectScale.z;
             _overhead += trainLength + 0.1f;
+
+            if (Random.value > 0.5f)
+            {
+                int spawnPickupAmount = Random.Range(0, 6);
+                thisPosition.y += spawnedObjectScale.y;
+                pickupGenerator.GeneratePickups(spawnPickupAmount, thisPosition);
+            }
             
             UpdateSelfPosition(transform.localPosition);
             

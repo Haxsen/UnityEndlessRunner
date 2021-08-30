@@ -1,3 +1,4 @@
+using _EndlessRunnerTestGame.Scripts.Pickup;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -20,6 +21,9 @@ namespace _EndlessRunnerTestGame.Scripts.Obstacle
         [Header("Obstacle Specific")]
         [Tooltip("The respective side Obstacle Generators.")]
         [SerializeField] private ObstacleGenerator[] obstacleGenerators;
+
+        [Header("Pickups")]
+        [SerializeField] private PickupGenerator pickupGenerator;
 
         private float _distanceFromPlayer;
     
@@ -58,20 +62,32 @@ namespace _EndlessRunnerTestGame.Scripts.Obstacle
         /// </summary>
         private void StartObstacleGeneration()
         {
+            int trainsGenerated = 0;
             foreach (ObstacleGenerator obstacleGenerator in obstacleGenerators)
             {
                 // @TODO: Remove auto probability calculation zombie code.
                 // int spawnedObstaclesAmount = obstacleContainer.childCount;
                 // float spawnProbability = 10 / (10 + (float) spawnedObstaclesAmount);
-                
-                if (Random.value > spawnProbability) continue;
+
+                if (Random.value > spawnProbability)
+                {
+                    if (Random.value > 0.5f)
+                    {
+                        int spawnPickupAmount = Random.Range(0, 6);
+                        pickupGenerator.GeneratePickups(spawnPickupAmount, obstacleGenerator.transform.position);
+                        
+                    }
+                    continue;
+                }
                 if (Random.value > 0.3f)
                 {
                     obstacleGenerator.GenerateObstacle();
                 }
                 else
                 {
+                    if (trainsGenerated >= 2) return;
                     obstacleGenerator.GenerateTrain(Random.value > 0.65f, false);
+                    trainsGenerated++;
                 }
             }
         }

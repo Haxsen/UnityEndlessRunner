@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Selectable
   - Climber
+  - Pickup
   layers:
   - Default
   - TransparentFX
