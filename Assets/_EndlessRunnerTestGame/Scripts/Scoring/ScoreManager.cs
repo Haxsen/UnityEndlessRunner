@@ -1,3 +1,4 @@
+using _EndlessRunnerTestGame.Scripts.SO;
 using UnityEngine;
 
 namespace _EndlessRunnerTestGame.Scripts.Scoring
@@ -8,10 +9,11 @@ namespace _EndlessRunnerTestGame.Scripts.Scoring
     public class ScoreManager : MonoBehaviour
     {
         public int score;
+        public ScoringSO scoringObject;
 
         public void AddScore(int toAddScore)
         {
-            score += toAddScore;
+            scoringObject.score += toAddScore;
         }
     }
 }
