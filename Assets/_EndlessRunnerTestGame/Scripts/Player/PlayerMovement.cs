@@ -1,8 +1,6 @@
 ﻿using System.Collections;
 using _EndlessRunnerTestGame.Scripts.Input;
 using _EndlessRunnerTestGame.Scripts.SO;
-using UniRx;
-using UniRx.Triggers;
 using UnityEngine;
 
 namespace _EndlessRunnerTestGame.Scripts.Player
@@ -34,11 +32,6 @@ namespace _EndlessRunnerTestGame.Scripts.Player
             if (!TryGetComponent(out _rb)) Debug.LogError("Missing RigidBody on the Player.");
             if (!TryGetComponent(out _playerPlayerInputEvents)) Debug.LogError("Missing InputEvents on the Player.");
             MoveForward();
-            // this.FixedUpdateAsObservable()
-            //     .Where(x => _rb.velocity.z == 0)
-            //     .
-            //     .Subscribe(_ => gameEventsSo.OnGameOver.Invoke())
-            //     .Dispose();
         }
 
         private void OnEnable()
