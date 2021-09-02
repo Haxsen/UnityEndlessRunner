@@ -46,7 +46,7 @@ namespace _EndlessRunnerTestGame.Scripts.Player
 
         private void Awake()
         {
-            TryGetComponent(out _groundChecker);
+            if (!TryGetComponent(out _groundChecker)) Debug.LogError("Missing GroundChecker on Player.");
             _touchInputResponse = GetComponentInChildren<ITouchInputResponse>();
             ConfigureInputCallbacks();
             ConfigureTouchCallbacks();

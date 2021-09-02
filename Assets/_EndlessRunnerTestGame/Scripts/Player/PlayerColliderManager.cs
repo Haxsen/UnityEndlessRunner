@@ -14,24 +14,24 @@ namespace _EndlessRunnerTestGame.Scripts.Player
         [Tooltip("Roll interval in seconds.")]
         [SerializeField] private float waitRevertRollMode = 1.5f;
         
-        private IPlayerInputEvents _playerPlayerInputEvents;
+        private IPlayerInputEvents _playerInputEvents;
         private Coroutine _revertRollModeCoroutine;
         private bool _isColliderAtDefaultSize = true;
 
         private void Awake()
         {
-            transform.parent.TryGetComponent(out _playerPlayerInputEvents);
-            _playerPlayerInputEvents.OnRollDown += ChangeToRollMode;
+            if (!transform.parent.TryGetComponent(out _playerInputEvents)) Debug.LogError("Missing InputEvents on Parent.");
+            _playerInputEvents.OnRollDown += ChangeToRollMode;
         }
 
         private void OnEnable()
         {
-            _playerPlayerInputEvents.OnRollDown += ChangeToRollMode;
+            _playerInputEvents.OnRollDown += ChangeToRollMode;
         }
 
         private void OnDisable()
         {
-            _playerPlayerInputEvents.OnRollDown -= ChangeToRollMode;
+            _playerInputEvents.OnRollDown -= ChangeToRollMode;
         }
 
         /// <summary>

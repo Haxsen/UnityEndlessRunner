@@ -1,5 +1,8 @@
 ﻿using System.Collections;
 using _EndlessRunnerTestGame.Scripts.Input;
+using _EndlessRunnerTestGame.Scripts.SO;
+using UniRx;
+using UniRx.Triggers;
 using UnityEngine;
 
 namespace _EndlessRunnerTestGame.Scripts.Player
@@ -17,6 +20,9 @@ namespace _EndlessRunnerTestGame.Scripts.Player
         [SerializeField] private float sideChangeSpeed = 1f;
         [Tooltip("Position offset setter (e.g. The value 1.5 will make the player move 1.5 units on X axis)")]
         [SerializeField] private float sidePositionMultiplier = 1.5f;
+
+        [Header("Game Events")]
+        [SerializeField] private GameEventsSO gameEventsSO;
         
         private Rigidbody _rb;
         private IPlayerInputEvents _playerPlayerInputEvents;
@@ -25,8 +31,14 @@ namespace _EndlessRunnerTestGame.Scripts.Player
 
         private void Awake()
         {
-            TryGetComponent(out _rb);
-            TryGetComponent(out _playerPlayerInputEvents);
+            if (!TryGetComponent(out _rb)) Debug.LogError("Missing RigidBody on the Player.");
+            if (!TryGetComponent(out _playerPlayerInputEvents)) Debug.LogError("Missing InputEvents on the Player.");
+            MoveForward();
+            // this.FixedUpdateAsObservable()
+            //     .Where(x => _rb.velocity.z == 0)
+            //     .
+            //     .Subscribe(_ => gameEventsSo.OnGameOver.Invoke())
+            //     .Dispose();
         }
 
         private void OnEnable()
@@ -45,7 +57,16 @@ namespace _EndlessRunnerTestGame.Scripts.Player
 
         private void FixedUpdate()
         {
-            MoveForward();
+            if (_rb.velocity.z == 0)
+            {
+                gameEventsSO.OnGameOver?.Invoke();
+                GameOverThrowCharacter();
+                this.enabled = false;
+            }
+            else
+            {
+                MoveForward();
+            }
         }
 
         /// <summary>
@@ -56,7 +77,10 @@ namespace _EndlessRunnerTestGame.Scripts.Player
             Vector3 velocity = _rb.velocity;
             velocity.x = 0;
             velocity.z = 1 * Time.fixedDeltaTime * speed;
-            _rb.velocity = velocity;
+            if (!Mathf.Approximately(_rb.velocity.z, velocity.z))
+            {
+                _rb.velocity = velocity;
+            }
         }
 
         /// <summary>
@@ -118,6 +142,11 @@ namespace _EndlessRunnerTestGame.Scripts.Player
         private void RollDown()
         {
             _rb.AddForce(Vector3.down * jumpPower, ForceMode.Impulse);
+        }
+
+        private void GameOverThrowCharacter()
+        {
+            _rb.velocity = new Vector3(0, 1, -1) * 10;
         }
     }
 }

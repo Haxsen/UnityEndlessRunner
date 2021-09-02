@@ -10,29 +10,29 @@ namespace _EndlessRunnerTestGame.Scripts.Animation
         [SerializeField] private CharacterAnimatorValues characterAnimatorValues = new CharacterAnimatorValues();
         
         private Animator _animator;
-        private IPlayerInputEvents _playerPlayerInputEvents;
+        private IPlayerInputEvents _playerInputEvents;
         private IGroundChecker _groundChecker;
 
         private void Awake()
         {
-            TryGetComponent(out _animator);
-            TryGetComponent(out _playerPlayerInputEvents);
-            TryGetComponent(out _groundChecker);
+            if(!TryGetComponent(out _animator)) Debug.LogError("Missing Animator on the Character.");
+            if(!TryGetComponent(out _playerInputEvents)) Debug.LogError("Missing InputEvents on the Player.");
+            if(!TryGetComponent(out _groundChecker)) Debug.LogError("Missing GroundChecker on the Player.");
             StartRunForwards();
         }
 
         private void OnEnable()
         {
-            _playerPlayerInputEvents.OnJump += StartJump;
-            _playerPlayerInputEvents.OnChangeSide += StartChangingSide;
-            _playerPlayerInputEvents.OnRollDown += StartRolling;
+            _playerInputEvents.OnJump += StartJump;
+            _playerInputEvents.OnChangeSide += StartChangingSide;
+            _playerInputEvents.OnRollDown += StartRolling;
         }
 
         private void OnDisable()
         {
-            _playerPlayerInputEvents.OnJump -= StartJump;
-            _playerPlayerInputEvents.OnChangeSide -= StartChangingSide;
-            _playerPlayerInputEvents.OnRollDown -= StartRolling;
+            _playerInputEvents.OnJump -= StartJump;
+            _playerInputEvents.OnChangeSide -= StartChangingSide;
+            _playerInputEvents.OnRollDown -= StartRolling;
         }
 
         private void StartRunForwards()
