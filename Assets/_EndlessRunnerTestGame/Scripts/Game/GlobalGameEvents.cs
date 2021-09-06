@@ -7,10 +7,5 @@ namespace _EndlessRunnerTestGame.Scripts.Game
         public static Action OnGameStarted;
         public static Action OnPlayerDied;
         public static Action OnGameOver;
-
-        public static void StartGameEvent()
-        {
-            OnGameStarted?.Invoke();
-        }
     }
 }

@@ -1,33 +1,48 @@
 ﻿using _EndlessRunnerTestGame.Scripts.Input.Touch;
 using _EndlessRunnerTestGame.Scripts.Player;
 using _EndlessRunnerTestGame.Scripts.Scoring;
-using _EndlessRunnerTestGame.Scripts.SO;
 using UnityEngine;
 
 namespace _EndlessRunnerTestGame.Scripts.Game
 {
     public class GameManager : MonoBehaviour
     {
-        [SerializeField] private GameEventsSO gameEventsObject;
         [SerializeField] private PlayerManager playerManager;
         [SerializeField] private TouchInputManager touchInputManager;
+        [SerializeField] private GameSceneManager gameSceneManager;
 
-        private void OnEnable()
+        [SerializeField] private GameObject gameOverMenu;
+
+        private void Awake()
         {
-            gameEventsObject.OnGameStarted += StartGame;
+            GlobalGameEvents.OnGameOver += EnableGameOverMenu;
         }
 
-        private void OnDisable()
+        /// <summary>
+        /// Shows the game over menu when player dies.
+        /// </summary>
+        private void EnableGameOverMenu()
         {
-            gameEventsObject.OnGameStarted -= StartGame;
+            if (gameOverMenu != null) gameOverMenu.SetActive(true);
         }
 
+        /// <summary>
+        /// Starts the game by activating player and input.
+        /// </summary>
         public void StartGame()
         {
             playerManager.ActivatePlayer();
             touchInputManager.enabled = true;
             ScoreManager.Score = 0;
             GlobalGameEvents.OnGameStarted?.Invoke();
+        }
+
+        /// <summary>
+        /// Restarts the game by reloading the current scene.
+        /// </summary>
+        public void RestartGame()
+        {
+            gameSceneManager.ReloadScene();
         }
     }
 }

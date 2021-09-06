@@ -130,7 +130,9 @@ namespace _EndlessRunnerTestGame.Scripts.Player
         /// </summary>
         private void RollDown()
         {
-            rb.AddForce(Vector3.down * jumpPower, ForceMode.Impulse);
+            Vector3 velocity = rb.velocity;
+            velocity.y = - 1 * Time.deltaTime * jumpPower;
+            rb.velocity = velocity;
         }
     }
 }

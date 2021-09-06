@@ -61,12 +61,18 @@ namespace _EndlessRunnerTestGame.Scripts.Player
         {
             ContactPoint contactPoint = other.GetContact(0);
             Vector3 playerPosition = transform.position;
+            
+            // Move player position a bit upwards to be away from ground
             playerPosition.y += 1;
+            
             Vector3 contactDirection = (contactPoint.point - playerPosition).normalized;
+            
             float sideMatch = Vector3.Dot(Vector3.left, contactDirection);
             sideMatch = Mathf.Abs(sideMatch);
+            
             // Debug.DrawLine(transform.position, contactDirection, Color.green, 10);
             // Debug.Log($"Contact Count: {other.contactCount} ; Side direction matching = {sideMatch}");
+            
             return sideMatch;
         }
     }

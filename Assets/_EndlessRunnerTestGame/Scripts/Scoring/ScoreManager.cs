@@ -1,4 +1,3 @@
-using _EndlessRunnerTestGame.Scripts.SO;
 using UnityEngine;
 
 namespace _EndlessRunnerTestGame.Scripts.Scoring
@@ -9,13 +8,14 @@ namespace _EndlessRunnerTestGame.Scripts.Scoring
     public class ScoreManager : MonoBehaviour
     {
         public static int Score;
-        public int highScore;
+        
+        private int _highScore;
         // public ScoringSO scoringObject;
 
-        // private void Start()
-        // {
-        //     highScore = PlayerPrefs.GetInt("HighScore");
-        // }
+        private void Awake()
+        {
+            _highScore = PlayerPrefs.GetInt("HighScore");
+        }
 
         /// <summary>
         /// Adds the specified amount to the score.
@@ -25,18 +25,15 @@ namespace _EndlessRunnerTestGame.Scripts.Scoring
         {
             // scoringObject.score += toAddScore;
             Score += toAddScore;
-            SetHighScore();
+            if (Score > _highScore) SetHighScore();
         }
 
         private void SetHighScore()
         {
             // if (scoringObject.score > scoringObject.highScore)
             // scoringObject.highScore = scoringObject.score;
-            if (Score > highScore)
-            {
-                highScore = Score;
-                PlayerPrefs.SetInt("HighScore", highScore);
-            }
+            _highScore = Score;
+            PlayerPrefs.SetInt("HighScore", _highScore);
         }
     }
 }
