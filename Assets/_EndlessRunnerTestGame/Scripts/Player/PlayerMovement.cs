@@ -1,6 +1,6 @@
 ﻿using System.Collections;
+using _EndlessRunnerTestGame.Scripts.Game;
 using _EndlessRunnerTestGame.Scripts.Input;
-using _EndlessRunnerTestGame.Scripts.SO;
 using UnityEngine;
 
 namespace _EndlessRunnerTestGame.Scripts.Player
@@ -11,27 +11,25 @@ namespace _EndlessRunnerTestGame.Scripts.Player
     public class PlayerMovement : MonoBehaviour
     {
         [Header("Basic movement")]
-        [SerializeField] private float speed = 100f;
+        [SerializeField] private float speed = 250;
         [SerializeField] private float jumpPower = 350f;
         
         [Header("Side movement")]
-        [SerializeField] private float sideChangeSpeed = 1f;
+        [SerializeField] private float sideChangeSpeed = 0.5f;
         [Tooltip("Position offset setter (e.g. The value 1.5 will make the player move 1.5 units on X axis)")]
         [SerializeField] private float sidePositionMultiplier = 1.5f;
-
-        [Header("Game Events")]
-        [SerializeField] private GameEventsSO gameEventsSO;
         
-        private Rigidbody _rb;
+        [Header("Physics")]
+        public Rigidbody rb;
+        
         private IPlayerInputEvents _playerPlayerInputEvents;
         private Coroutine _sidewaysCoroutine;
         private int _currentSide;
 
         private void Awake()
         {
-            if (!TryGetComponent(out _rb)) Debug.LogError("Missing RigidBody on the Player.");
+            if (!TryGetComponent(out rb)) Debug.LogError("Missing RigidBody on the Player.");
             if (!TryGetComponent(out _playerPlayerInputEvents)) Debug.LogError("Missing InputEvents on the Player.");
-            MoveForward();
         }
 
         private void OnEnable()
@@ -39,6 +37,8 @@ namespace _EndlessRunnerTestGame.Scripts.Player
             _playerPlayerInputEvents.OnJump += Jump;
             _playerPlayerInputEvents.OnChangeSide += MoveSideways;
             _playerPlayerInputEvents.OnRollDown += RollDown;
+            MoveForward();
+
         }
 
         private void OnDisable()
@@ -50,11 +50,9 @@ namespace _EndlessRunnerTestGame.Scripts.Player
 
         private void FixedUpdate()
         {
-            if (_rb.velocity.z == 0)
+            if (rb.velocity.z == 0)
             {
-                gameEventsSO.OnGameOver?.Invoke();
-                GameOverThrowCharacter();
-                this.enabled = false;
+                GlobalGameEvents.OnGameOver?.Invoke();
             }
             else
             {
@@ -67,13 +65,11 @@ namespace _EndlessRunnerTestGame.Scripts.Player
         /// </summary>
         private void MoveForward()
         {
-            Vector3 velocity = _rb.velocity;
+            Vector3 velocity = rb.velocity;
             velocity.x = 0;
-            velocity.z = 1 * Time.fixedDeltaTime * speed;
-            if (!Mathf.Approximately(_rb.velocity.z, velocity.z))
-            {
-                _rb.velocity = velocity;
-            }
+            velocity.z = Time.fixedDeltaTime * speed;
+            rb.velocity = velocity;
+            Debug.Log("MoveForward");
         }
 
         /// <summary>
@@ -81,9 +77,9 @@ namespace _EndlessRunnerTestGame.Scripts.Player
         /// </summary>
         public void PushDown()
         {
-            Vector3 velocity = _rb.velocity;
+            Vector3 velocity = rb.velocity;
             velocity.y = -1;
-            _rb.velocity = velocity;
+            rb.velocity = velocity;
         }
 
         /// <summary>
@@ -91,7 +87,7 @@ namespace _EndlessRunnerTestGame.Scripts.Player
         /// </summary>
         private void Jump()
         {
-            _rb.AddForce(Vector3.up * jumpPower, ForceMode.Impulse);
+            rb.AddForce(Vector3.up * jumpPower, ForceMode.Impulse);
         }
 
         /// <summary>
@@ -116,14 +112,14 @@ namespace _EndlessRunnerTestGame.Scripts.Player
             float toPositionX = toSide * sidePositionMultiplier;
             while (true)
             {
-                Vector3 position = _rb.position;
+                Vector3 position = rb.position;
                 if (Mathf.Approximately(position.x, toPositionX))
                 {
                     Debug.Log("sideReached");
                     yield break;
                 }
                 float lerpPositionX = Mathf.Lerp(position.x, toPositionX, Time.deltaTime * sideChangeSpeed * ticks);
-                _rb.MovePosition(new Vector3(lerpPositionX, position.y, position.z));
+                rb.MovePosition(new Vector3(lerpPositionX, position.y, position.z));
                 ticks++;
                 yield return new WaitForEndOfFrame();
             }
@@ -134,12 +130,7 @@ namespace _EndlessRunnerTestGame.Scripts.Player
         /// </summary>
         private void RollDown()
         {
-            _rb.AddForce(Vector3.down * jumpPower, ForceMode.Impulse);
-        }
-
-        private void GameOverThrowCharacter()
-        {
-            _rb.velocity = new Vector3(0, 1, -1) * 10;
+            rb.AddForce(Vector3.down * jumpPower, ForceMode.Impulse);
         }
     }
 }

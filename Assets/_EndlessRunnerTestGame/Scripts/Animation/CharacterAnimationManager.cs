@@ -18,7 +18,6 @@ namespace _EndlessRunnerTestGame.Scripts.Animation
             if(!TryGetComponent(out _animator)) Debug.LogError("Missing Animator on the Character.");
             if(!TryGetComponent(out _playerInputEvents)) Debug.LogError("Missing InputEvents on the Player.");
             if(!TryGetComponent(out _groundChecker)) Debug.LogError("Missing GroundChecker on the Player.");
-            StartRunForwards();
         }
 
         private void OnEnable()
@@ -26,6 +25,7 @@ namespace _EndlessRunnerTestGame.Scripts.Animation
             _playerInputEvents.OnJump += StartJump;
             _playerInputEvents.OnChangeSide += StartChangingSide;
             _playerInputEvents.OnRollDown += StartRolling;
+            StartRunForwards();
         }
 
         private void OnDisable()

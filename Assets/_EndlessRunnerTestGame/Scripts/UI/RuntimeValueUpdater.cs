@@ -1,4 +1,4 @@
-﻿using _EndlessRunnerTestGame.Scripts.SO;
+﻿using _EndlessRunnerTestGame.Scripts.Scoring;
 using UniRx;
 using UniRx.Triggers;
 using UnityEngine;
@@ -9,12 +9,11 @@ namespace _EndlessRunnerTestGame.Scripts.UI
     public class RuntimeValueUpdater : MonoBehaviour
     {
         public Text uIText;
-        public ScoringSO scoringObject;
 
         private void Start()
         {
             this.UpdateAsObservable()
-                .Subscribe(_ => uIText.text = scoringObject.score.ToString());
+                .Subscribe(_ => uIText.text = ScoreManager.Score.ToString());
         }
     }
 }

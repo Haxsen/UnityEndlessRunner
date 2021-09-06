@@ -7,5 +7,11 @@ namespace _EndlessRunnerTestGame.Scripts.SO
     public class GameEventsSO : ScriptableObject
     {
         public UnityAction OnGameOver;
+        public UnityAction OnGameStarted;
+
+        public void StartGameEvent()
+        {
+            OnGameStarted?.Invoke();
+        }
     }
 }

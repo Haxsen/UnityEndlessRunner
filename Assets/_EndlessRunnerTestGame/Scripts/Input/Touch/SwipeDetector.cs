@@ -47,7 +47,7 @@ namespace _EndlessRunnerTestGame.Scripts.Input.Touch
         {
             _startPosition = position;
             _startTime = time;
-            Debug.Log("swipe start");
+            // Debug.Log("swipe start");
         }
 
         /// <summary>
@@ -59,7 +59,7 @@ namespace _EndlessRunnerTestGame.Scripts.Input.Touch
         {
             _endPosition = position;
             _endTime = time;
-            Debug.Log("swipe end");
+            // Debug.Log("swipe end");
             DetectSwipe();
         }
 
@@ -69,21 +69,21 @@ namespace _EndlessRunnerTestGame.Scripts.Input.Touch
         private void DetectSwipe()
         {
             float dist = Vector3.Distance(_startPosition, _endPosition);
-            Debug.Log($"Dist is greater: {dist} > {minSwipeDistance}");
+            // Debug.Log($"Dist is greater: {dist} > {minSwipeDistance}");
             dist = (_endTime - _startTime);
-            Debug.Log($"Dist is greater: {dist} < {maxSwipeTime}");
+            // Debug.Log($"Dist is greater: {dist} < {maxSwipeTime}");
             if (Vector3.Distance(_startPosition, _endPosition) >= minSwipeDistance
                 && (_endTime - _startTime) < maxSwipeTime)
             {
-                Debug.Log("Swiped");
-                Debug.DrawLine(_startPosition, _endPosition, Color.green, 2f);
+                // Debug.Log("Swiped");
+                // Debug.DrawLine(_startPosition, _endPosition, Color.green, 2f);
                 Vector2 swipedDirection = new Vector2(_endPosition.x - _startPosition.x,
                     _endPosition.y - _startPosition.y).normalized;
                 SwipeDirection(swipedDirection);
             }
             else
             {
-                Debug.Log("not swiped");
+                // Debug.Log("not swiped");
             }
         }
 
@@ -95,22 +95,22 @@ namespace _EndlessRunnerTestGame.Scripts.Input.Touch
         {
             if (Vector2.Dot(Vector2.up, swipedDirection) > directionThreshold)
             {
-                Debug.Log("swiped up");
+                // Debug.Log("swiped up");
                 _swipeResponse.Jump();
             }
             else if (Vector2.Dot(Vector2.down, swipedDirection) > directionThreshold)
             {
-                Debug.Log("swiped down");
+                // Debug.Log("swiped down");
                 _swipeResponse.RollDown();
             }
             else if (Vector2.Dot(Vector2.left, swipedDirection) > directionThreshold)
             {
-                Debug.Log("swiped left");
+                // Debug.Log("swiped left");
                 _swipeResponse.MoveSideways(-1);
             }
             else if (Vector2.Dot(Vector2.right, swipedDirection) > directionThreshold)
             {
-                Debug.Log("swiped right");
+                // Debug.Log("swiped right");
                 _swipeResponse.MoveSideways(1);
             }
         }

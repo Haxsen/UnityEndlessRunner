@@ -9,6 +9,7 @@ namespace _EndlessRunnerTestGame.Scripts.SO
     public class ScoringSO : ScriptableObject, ISerializationCallbackReceiver
     {
         public int score;
+        public int highScore;
 
         public void OnAfterDeserialize()
         {
