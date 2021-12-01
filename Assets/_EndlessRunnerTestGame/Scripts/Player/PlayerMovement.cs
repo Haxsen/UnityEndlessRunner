@@ -25,6 +25,7 @@ namespace _EndlessRunnerTestGame.Scripts.Player
         private IPlayerInputEvents _playerPlayerInputEvents;
         private Coroutine _sidewaysCoroutine;
         private int _currentSide;
+        private bool _possiblyStucked;
 
         private void Awake()
         {
@@ -48,15 +49,24 @@ namespace _EndlessRunnerTestGame.Scripts.Player
             _playerPlayerInputEvents.OnRollDown -= RollDown;
         }
 
+        private void Update()
+        {
+            if (rb.velocity.z == 0 && _possiblyStucked)
+            {
+                GlobalGameEvents.OnGameOver?.Invoke();
+            }
+        }
+
         private void FixedUpdate()
         {
             if (rb.velocity.z == 0)
             {
-                GlobalGameEvents.OnGameOver?.Invoke();
+                _possiblyStucked = true;
             }
             else
             {
                 MoveForward();
+                _possiblyStucked = false;
             }
         }
 
@@ -69,7 +79,6 @@ namespace _EndlessRunnerTestGame.Scripts.Player
             velocity.x = 0;
             velocity.z = Time.fixedDeltaTime * speed;
             rb.velocity = velocity;
-            Debug.Log("MoveForward");
         }
 
         /// <summary>
@@ -115,7 +124,6 @@ namespace _EndlessRunnerTestGame.Scripts.Player
                 Vector3 position = rb.position;
                 if (Mathf.Approximately(position.x, toPositionX))
                 {
-                    Debug.Log("sideReached");
                     yield break;
                 }
                 float lerpPositionX = Mathf.Lerp(position.x, toPositionX, Time.deltaTime * sideChangeSpeed * ticks);

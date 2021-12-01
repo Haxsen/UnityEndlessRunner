@@ -29,7 +29,6 @@ namespace _EndlessRunnerTestGame.Scripts.Input.Touch
         {
             _touchInputManager.OnStartTouch += SwipeStart;
             _touchInputManager.OnEndTouch += SwipeEnd;
-            Debug.Log("subbed");
         }
 
         private void OnDisable()

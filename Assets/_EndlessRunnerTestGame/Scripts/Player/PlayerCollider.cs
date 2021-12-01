@@ -25,7 +25,6 @@ namespace _EndlessRunnerTestGame.Scripts.Player
         {
             if (other.gameObject.CompareTag(climberTag))
             {
-                Debug.Log("collision exited climber");
                 playerMovement.PushDown();
             }
         }
@@ -69,9 +68,6 @@ namespace _EndlessRunnerTestGame.Scripts.Player
             
             float sideMatch = Vector3.Dot(Vector3.left, contactDirection);
             sideMatch = Mathf.Abs(sideMatch);
-            
-            // Debug.DrawLine(transform.position, contactDirection, Color.green, 10);
-            // Debug.Log($"Contact Count: {other.contactCount} ; Side direction matching = {sideMatch}");
             
             return sideMatch;
         }

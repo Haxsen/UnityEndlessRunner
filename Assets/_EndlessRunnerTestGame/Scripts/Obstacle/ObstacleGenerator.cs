@@ -98,7 +98,6 @@ namespace _EndlessRunnerTestGame.Scripts.Obstacle
         /// </summary>
         private void ExpandTrain()
         {
-            Debug.Log("expanding train");
             _isGeneratingTrain = true;
             GenerateTrain(false, true);
         }

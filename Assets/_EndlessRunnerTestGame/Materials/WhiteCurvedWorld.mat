@@ -8,13 +8,14 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: WhiteCurvedWorld
-  m_Shader: {fileID: -6465566751694194690, guid: e79a65b67c101c3458cee5b56d82917f, type: 3}
-  m_ShaderKeywords: _GLOSSYREFLECTIONS_OFF
+  m_Shader: {fileID: 4800000, guid: 933532a4fcc9baf4fa0491de14d08ed7, type: 3}
+  m_ShaderKeywords: 
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
-  m_CustomRenderQueue: -1
-  stringTagMap: {}
+  m_CustomRenderQueue: 2000
+  stringTagMap:
+    RenderType: Opaque
   disabledShaderPasses: []
   m_SavedProperties:
     serializedVersion: 3
@@ -100,13 +101,15 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Floats:
-    - CurveX: 0
-    - CurveY: 0
-    - FrontRange: 1
-    - Height: -0.08
-    - StartsAt: -9.8
+    - CurveX: -0.016
+    - CurveY: -0
+    - FrontRange: 3.52
+    - Height: -0.32
+    - StartsAt: -10.66
     - Vector1_2EE2CB80: 0.1
     - _AlphaClip: 0
+    - _BendFallOff: 15
+    - _BendFallOffStr: 1.5
     - _Blend: 0
     - _BumpScale: 1
     - _ClearCoatMask: 0
@@ -145,6 +148,8 @@ Material:
     - Vector2_C848BFFB: {r: 0.25, g: 0.25, b: 0, a: 0}
     - _Albedo: {r: 0.5566038, g: 0.5566038, b: 0.5566038, a: 1}
     - _BaseColor: {r: 0.4339623, g: 0.4339623, b: 0.4339623, a: 1}
+    - _BendAmount: {r: -0.025, g: -0.025, b: 0, a: 0}
+    - _BendOrigin: {r: 0, g: 0, b: 0, a: 0}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _FogColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
